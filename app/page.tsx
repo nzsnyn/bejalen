@@ -1,103 +1,100 @@
-import Image from "next/image";
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import MainLayouts from '@/components/layouts/MainLayouts'
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <MainLayouts>
+      {/* Hero */}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className='bg-[url(/header-home.png)] h-screen w-full bg-cover bg-no-repeat bg-center flex items-center justify-center px-4'>
+        <div className='text-center font-kameron'>
+          <h1 className='text-white text-3xl sm:text-4xl md:text-5xl lg:text-[64px]'>Desa Wisata, Desa Budaya, <br className='hidden sm:block' />Desa Bejalen</h1>
+          <p className='text-[#EFE3C2] text-sm sm:text-base md:text-lg mt-5 sm:mt-10 max-w-4xl'>Dukungan dan kedatangan Anda tidak hanya menciptakan pengalaman bermakna, <br className='hidden md:block' />tetapi juga memberdayakan ekonomi lokal</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </div>
+
+      {/* content */}
+      <div className='flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 lg:gap-20 mt-12 md:mt-24 px-4'>
+        <h1 className='font-kameron text-3xl sm:text-4xl md:text-5xl lg:text-[64px] text-center md:text-right'>Desa Wisata <br />Untuk Masa <br />Berkelanjutan</h1>
+        <p className='font-kameron text-lg sm:text-xl md:text-2xl w-full md:w-[500px] lg:w-[667px]'>Desa Bejalen merupakan salah satu destinasi desa wisata yang terletak di Kecamatan Ambarawa, Kabupaten Semarang, Provinsi Jawa Tengah. Desa ini terletak tepat di pinggir Danau Rawa Pening yang dikelilingi oleh rangkaian pegunungan, yaitu Gunung Merbabu, Gunung Telomoyo, dan Gunung Ungaran.</p>
+      </div>
+
+      <div className='mt-16 md:mt-24 relative px-4 mx-auto max-w-6xl'>
+        <div>
+          <h1 className='font-kameron text-xl sm:text-2xl md:text-3xl font-medium text-center md:text-right'>Desa Wisata Bejalen</h1>
+          <h1 className='font-kameron text-3xl sm:text-4xl md:text-5xl text-center md:text-right text-[#85A947]'>Vast Expanse of Swamp Water</h1>
+        </div>
+
+        <div className='relative mt-10'>
+          {/* Card and Image Container */}
+          <div className='flex flex-col md:flex-row md:justify-end'>
+            {/* Rawa Pening Card */}
+            <div className='w-full md:w-[350px] lg:w-[400px] bg-[#85A947] md:absolute md:-left-14 md:top-[25%] md:transform md:-translate-y-1/2 z-10 p-6 md:p-0'>
+              <h1 className='text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl md:ml-11 md:mt-5 font-kameron'>Rawa <br />Pening</h1>
+              <p className='text-white text-lg sm:text-xl md:text-2xl md:ml-11 mt-3 md:mt-5 font-kameron'>Menyegarkan pikiran di akhir pekan tidak memerlukan rencana wisata yang mewah. Rekreasi sederhana di Rawa Pening saja bisa jadi kegiatan yang menyenangkan.</p>
+              <Link href="/rawa-pening">
+                <div className='flex justify-center items-center gap-2 mt-5 w-[120px] h-10 md:ml-11 bg-[#123524]'>
+                    <p className='font-kameron text-sm font-bold text-white'>Selengkapnya</p>
+                </div>
+              </Link>
+            </div>
+
+            {/* Image */}
+            <div className='hidden md:block md:w-[70%] lg:w-auto'>
+              <Image
+                src="/header-home2.png"
+                alt="header"
+                width={800}
+                height={500}
+                className='w-full'
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Destinasi */}
+      <div className='mt-16 md:mt-32 px-4'>
+        <p className='font-kameron text-center text-2xl md:text-3xl'>Destinasi</p>
+        <h1 className='font-kameron text-center text-4xl sm:text-5xl md:text-6xl'>Pada Desa Hepi Desa Bejalen</h1>
+
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-10 max-w-5xl mx-auto mt-8 md:mt-16'>
+          {[
+            { name: 'Perahu Mesin', image: '/perahu.png', link: '/perahu-mesin' },
+            { name: 'Lucky Sky', image: '/lucky.png', link: '/lucky-land' },
+            { name: 'Kampoeng Rawa', image: '/kampoeng.png', link: '/kampoeng-rawa' }
+          ].map((destination, index) => (
+            <Link href={destination.link} key={index}>
+              <div
+                className='aspect-square bg-white overflow-hidden relative shadow-md'
+              >
+                {/* Full-sized image */}
+                <Image
+                  src={destination.image}
+                  alt={destination.name}
+                  width={400}
+                  height={400}
+                  className='w-full h-full object-cover'
+                />
+
+                {/* Overlay text with gradient background for better readability */}
+                <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4'>
+                  <h3 className='font-kameron text-xl sm:text-2xl md:text-3xl text-white'>
+                    {destination.name.split(' ').map((word, i, arr) => (
+                      <React.Fragment key={i}>
+                        {word}
+                        {i !== arr.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </h3>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </MainLayouts>
+  )
 }
