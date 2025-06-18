@@ -35,9 +35,11 @@ export default function AdminHomepage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [contentVersion, setContentVersion] = useState<number | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [contentVersion, setContentVersion] = useState<number | null>(null);  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
+  const [publicImages, setPublicImages] = useState<{ [key: string]: any[] }>({});
+  const [isLoadingImages, setIsLoadingImages] = useState(false);
+  const [showImageSelector, setShowImageSelector] = useState<{ field: string, section: string } | null>(null);
   const router = useRouter();
 
   // Check for unsaved changes
@@ -99,11 +101,14 @@ export default function AdminHomepage() {
   const handleLogout = () => {
     Cookies.remove('admin-token');
     router.push('/admin/login');
-  };
-  const handleEdit = () => {
+  };  const handleEdit = () => {
     setIsEditing(true);
     setEditedContent(content);
     setHasUnsavedChanges(false);
+    // Load public images when entering edit mode
+    if (Object.keys(publicImages).length === 0) {
+      fetchPublicImages();
+    }
   };
 
   const handleCancel = () => {
@@ -163,6 +168,50 @@ export default function AdminHomepage() {
     }
   };
 
+  const fetchPublicImages = async () => {
+    setIsLoadingImages(true);
+    try {
+      const response = await fetch('/api/gallery/scan-public');
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          setPublicImages(result.data.groupedImages);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching public images:', error);
+      showNotification('error', 'Failed to load images from public folder');
+    }
+    setIsLoadingImages(false);
+  };
+
+  const handleImageSelect = (imageUrl: string, section: keyof HomepageContent, field: string) => {
+    handleInputChange(section, field, imageUrl);
+    setShowImageSelector(null);
+  };
+
+  const openImageSelector = (section: string, field: string) => {
+    setShowImageSelector({ section, field });
+    if (Object.keys(publicImages).length === 0) {
+      fetchPublicImages();
+    }
+  };
+
+  // Get all images in a flat array for dropdown
+  const getAllImages = () => {
+    const allImages: any[] = [];
+    Object.entries(publicImages).forEach(([folderName, files]) => {
+      files.forEach(file => {
+        allImages.push({
+          ...file,
+          displayName: `${folderName === 'root' ? 'Root' : folderName}/${file.name}`,
+          folderName
+        });
+      });
+    });
+    return allImages;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -177,6 +226,103 @@ export default function AdminHomepage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      {/* Image Selector Modal */}
+      {showImageSelector && (
+        <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Select Image from Public Folder</h3>
+              <button
+                onClick={() => setShowImageSelector(null)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-sm text-gray-600">
+                Click on an image to select it for {showImageSelector.field}
+              </p>
+              <button
+                onClick={fetchPublicImages}
+                disabled={isLoadingImages}
+                className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                {isLoadingImages ? 'Loading...' : 'Refresh'}
+              </button>
+            </div>
+
+            <div className="overflow-y-auto max-h-96">
+              {isLoadingImages ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin mx-auto h-8 w-8 text-blue-600">
+                    <svg fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500">Loading images...</p>
+                </div>
+              ) : Object.keys(publicImages).length === 0 ? (
+                <div className="text-center py-12">
+                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No images found</h3>
+                  <p className="mt-1 text-sm text-gray-500">No image files found in the public folder.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(publicImages).map(([folderName, files]) => (
+                    <div key={folderName}>
+                      <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        {folderName === 'root' ? 'Root Folder' : folderName} ({files.length} files)
+                      </h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {files.map((file: any, index: number) => (
+                          <div 
+                            key={`${folderName}-${index}`} 
+                            className="relative group cursor-pointer bg-gray-100 rounded-lg overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
+                            onClick={() => handleImageSelect(file.url, showImageSelector.section as keyof HomepageContent, showImageSelector.field)}
+                          >
+                            <div className="aspect-square">
+                              <img
+                                src={file.url}
+                                alt={file.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
+                              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            </div>
+                            <div className="p-2">
+                              <p className="text-xs text-gray-600 truncate">{file.name}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Notification */}
       {notification.type && (
         <div className={`fixed top-4 right-4 z-50 max-w-sm w-full ${
@@ -327,23 +473,86 @@ export default function AdminHomepage() {
                       {content?.hero.subtitle}
                     </p>
                   )}
-                </div>
-                <div>
+                </div>                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Background Image
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editedContent?.hero.backgroundImage || ''}
-                      onChange={(e) => handleInputChange('hero', 'backgroundImage', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="/path/to/image.jpg"
-                    />
+                  </label>                  {isEditing ? (
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <select
+                          value={editedContent?.hero.backgroundImage || ''}
+                          onChange={(e) => handleInputChange('hero', 'backgroundImage', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">-- Select an image --</option>
+                          {getAllImages().map((image, index) => (
+                            <option key={index} value={image.url}>
+                              {image.displayName} ({(image.size / 1024).toFixed(1)} KB)
+                            </option>
+                          ))}
+                        </select>
+                        <div className="flex space-x-2">
+                          <input
+                            type="text"
+                            value={editedContent?.hero.backgroundImage || ''}
+                            onChange={(e) => handleInputChange('hero', 'backgroundImage', e.target.value)}
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                            placeholder="Or enter custom path"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => openImageSelector('hero', 'backgroundImage')}
+                            className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                          >
+                            Gallery
+                          </button>
+                          <button
+                            type="button"
+                            onClick={fetchPublicImages}
+                            disabled={isLoadingImages}
+                            className="px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50"
+                          >
+                            {isLoadingImages ? '...' : '↻'}
+                          </button>
+                        </div>
+                      </div>
+                      {editedContent?.hero.backgroundImage && (
+                        <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                          <p className="text-sm text-gray-600 mb-2">Preview:</p>                          <div className="relative w-full h-32 bg-gray-100 rounded overflow-hidden">
+                            <img
+                              src={editedContent.hero.backgroundImage}
+                              alt="Background preview"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   ) : (
-                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                      {content?.hero.backgroundImage}
-                    </p>
+                    <div className="space-y-3">
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {content?.hero.backgroundImage}
+                      </p>
+                      {content?.hero.backgroundImage && (
+                        <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                          <p className="text-sm text-gray-600 mb-2">Preview:</p>                          <div className="relative w-full h-32 bg-gray-100 rounded overflow-hidden">
+                            <img
+                              src={content.hero.backgroundImage}
+                              alt="Background preview"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -452,23 +661,86 @@ export default function AdminHomepage() {
                       {content?.rawaPening.description}
                     </p>
                   )}
-                </div>
-                <div>
+                </div>                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Image
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editedContent?.rawaPening.image || ''}
-                      onChange={(e) => handleInputChange('rawaPening', 'image', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="/path/to/image.jpg"
-                    />
+                  </label>                  {isEditing ? (
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <select
+                          value={editedContent?.rawaPening.image || ''}
+                          onChange={(e) => handleInputChange('rawaPening', 'image', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">-- Select an image --</option>
+                          {getAllImages().map((image, index) => (
+                            <option key={index} value={image.url}>
+                              {image.displayName} ({(image.size / 1024).toFixed(1)} KB)
+                            </option>
+                          ))}
+                        </select>
+                        <div className="flex space-x-2">
+                          <input
+                            type="text"
+                            value={editedContent?.rawaPening.image || ''}
+                            onChange={(e) => handleInputChange('rawaPening', 'image', e.target.value)}
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                            placeholder="Or enter custom path"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => openImageSelector('rawaPening', 'image')}
+                            className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                          >
+                            Gallery
+                          </button>
+                          <button
+                            type="button"
+                            onClick={fetchPublicImages}
+                            disabled={isLoadingImages}
+                            className="px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50"
+                          >
+                            {isLoadingImages ? '...' : '↻'}
+                          </button>
+                        </div>
+                      </div>
+                      {editedContent?.rawaPening.image && (
+                        <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                          <p className="text-sm text-gray-600 mb-2">Preview:</p>                          <div className="relative w-full h-32 bg-gray-100 rounded overflow-hidden">
+                            <img
+                              src={editedContent.rawaPening.image}
+                              alt="Rawa Pening preview"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   ) : (
-                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                      {content?.rawaPening.image}
-                    </p>
+                    <div className="space-y-3">
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {content?.rawaPening.image}
+                      </p>
+                      {content?.rawaPening.image && (
+                        <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                          <p className="text-sm text-gray-600 mb-2">Preview:</p>                          <div className="relative w-full h-32 bg-gray-100 rounded overflow-hidden">
+                            <img
+                              src={content.rawaPening.image}
+                              alt="Rawa Pening preview"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>

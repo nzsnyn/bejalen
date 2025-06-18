@@ -123,10 +123,8 @@ export default function AdminDashboard() {
                                 <span className="text-sm font-medium text-gray-900 text-center">Bookings</span>
                                 <span className="text-xs text-gray-500 mt-1">{stats ? stats.totalBookings : '-'} items</span>
                             </div>
-                        </div>
-
-                        {/* Gallery */}
-                        <div className="group cursor-pointer" onClick={() => window.alert('Feature coming soon: Gallery Management')}>
+                        </div>                        {/* Gallery */}
+                        <div className="group cursor-pointer" onClick={() => router.push('/admin/gallery')}>
                             <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
                                 <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
                                     <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
