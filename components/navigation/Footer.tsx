@@ -41,10 +41,14 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className='w-full py-8 bg-[#123524] flex justify-center items-center'>
+            </div>            <div className='w-full py-8 bg-[#123524] flex flex-col sm:flex-row justify-center items-center gap-4'>
                 <p className='text-white font-kameron text-sm md:text-[16px] px-4 text-center'>Copyright © 2025. All rights reserved</p>
+                <div className='flex items-center gap-4'>
+                    <span className='text-gray-400'>|</span>
+                    <Link href="/admin" className='text-gray-400 hover:text-white text-sm transition-colors'>
+                        Admin Login
+                    </Link>
+                </div>
             </div>
 
             {/* WhatsApp floating button */}
