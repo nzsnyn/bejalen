@@ -7,6 +7,8 @@ import Cookies from 'js-cookie';
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -14,10 +16,31 @@ export default function AdminDashboard() {
     if (!token) {
       router.push('/admin/login');
     } else {
-      setIsAuthenticated(true);
+      try {
+        const userData = JSON.parse(token);
+        setUser(userData);
+        setIsAuthenticated(true);
+        fetchStats();
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        Cookies.remove('admin-token');
+        router.push('/admin/login');
+      }
     }
     setIsLoading(false);
   }, [router]);
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/admin/dashboard');
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
 
   const handleLogout = () => {
     Cookies.remove('admin-token');
@@ -37,14 +60,20 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
+    <div className="min-h-screen bg-gray-100">      {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Admin Dashboard
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Admin Dashboard
+              </h1>
+              {user && (
+                <p className="text-sm text-gray-600 mt-1">
+                  Welcome back, {user.name || user.username}!
+                </p>
+              )}
+            </div>
             <button
               onClick={handleLogout}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -69,25 +98,23 @@ export default function AdminDashboard() {
                   Anda berhasil login sebagai administrator. Ini adalah halaman dashboard yang dilindungi (protected route).
                 </p>
               </div>
-            </div>
-
-            {/* Stats Cards */}
+            </div>            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
-                        <span className="text-white text-sm font-bold">U</span>
+                        <span className="text-white text-sm font-bold">B</span>
                       </div>
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">
-                          Total Users
+                          Total Bookings
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          1,234
+                          {stats ? stats.totalBookings : '-'}
                         </dd>
                       </dl>
                     </div>
@@ -106,10 +133,10 @@ export default function AdminDashboard() {
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">
-                          Total Posts
+                          Tour Packages
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          567
+                          {stats ? stats.totalPackages : '-'}
                         </dd>
                       </dl>
                     </div>
@@ -122,16 +149,16 @@ export default function AdminDashboard() {
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                        <span className="text-white text-sm font-bold">V</span>
+                        <span className="text-white text-sm font-bold">C</span>
                       </div>
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">
-                          Views Today
+                          Contacts
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          8,901
+                          {stats ? stats.totalContacts : '-'}
                         </dd>
                       </dl>
                     </div>
@@ -153,7 +180,7 @@ export default function AdminDashboard() {
                           Revenue
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          $45,678
+                          Rp {stats ? stats.totalRevenue.toLocaleString('id-ID') : '-'}
                         </dd>
                       </dl>
                     </div>

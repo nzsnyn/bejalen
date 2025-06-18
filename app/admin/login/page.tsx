@@ -13,18 +13,32 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
-      // Set authentication cookie
-      Cookies.set('admin-token', 'authenticated', { expires: 1 }); // expires in 1 day
-      router.push('/admin/dashboard');
-    } else {
-      setError('Username atau password salah');
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Set authentication cookie with user data
+        Cookies.set('admin-token', JSON.stringify(data.user), { expires: 1 }); // expires in 1 day
+        router.push('/admin/dashboard');
+      } else {
+        setError(data.error || 'Terjadi kesalahan saat login');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Terjadi kesalahan koneksi');
     }
     
     setIsLoading(false);

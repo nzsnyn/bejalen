@@ -6,12 +6,21 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
+    "@prisma/client": "^6.10.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/js-cookie": "^3.0.6",
+    "bcryptjs": "^3.0.2",
     "js-cookie": "^3.0.5",
     "next": "15.3.3",
+    "prisma": "^6.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -21,6 +30,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

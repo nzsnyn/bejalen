@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin user model
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  email     String?  @unique
+  name      String?
+  role      String   @default("admin")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
+
+// Tourism package model
+model TourPackage {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  price       Decimal
+  duration    String
+  capacity    Int
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings Booking[]
+
+  @@map("tour_packages")
+}
+
+// Booking model
+model Booking {
+  id           String      @id @default(cuid())
+  customerName String
+  email        String
+  phone        String
+  packageId    String
+  package      TourPackage @relation(fields: [packageId], references: [id])
+  bookingDate  DateTime
+  totalPrice   Decimal
+  status       String      @default("pending") // pending, confirmed, cancelled
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("bookings")
+}
+
+// Gallery model for tourism photos
+model Gallery {
+  id          String   @id @default(cuid())
+  title       String   @unique
+  description String?
+  imageUrl    String
+  category    String   @default("general") // general, kampoeng-rawa, perahu-mesin, rawa-pening
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("gallery")
+}
+
+// Contact/inquiry model
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    String   @default("new") // new, read, replied
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contacts")
+}
