@@ -92,3 +92,16 @@ model Contact {
 
   @@map("contacts")
 }
+
+// Homepage content model
+model HomepageContent {
+  id        String   @id @default(cuid())
+  content   Json     // Store all homepage content as JSON
+  isActive  Boolean  @default(true)
+  version   Int      @default(1)
+  createdBy String?  // Admin ID who created/updated
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("homepage_content")
+}

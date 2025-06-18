@@ -90,8 +90,43 @@ async function main() {
       create: item,
     });
   }
-
   console.log('✅ Gallery items created');
+
+  // Create default homepage content
+  const homepageContent = {
+    hero: {
+      title: "Desa Wisata, Desa Budaya, Desa Bejalen",
+      subtitle: "Dukungan dan kedatangan Anda tidak hanya menciptakan pengalaman bermakna, tetapi juga memberdayakan ekonomi lokal",
+      backgroundImage: "/header-home.png"
+    },
+    about: {
+      title: "Desa Wisata Untuk Masa Berkelanjutan",
+      description: "Desa Bejalen merupakan salah satu destinasi desa wisata yang terletak di Kecamatan Ambarawa, Kabupaten Semarang, Provinsi Jawa Tengah. Desa ini terletak tepat di pinggir Danau Rawa Pening yang dikelilingi oleh rangkaian pegunungan, yaitu Gunung Merbabu, Gunung Telomoyo, dan Gunung Ungaran."
+    },
+    rawaPening: {
+      title: "Vast Expanse of Swamp Water",
+      subtitle: "Desa Wisata Bejalen",
+      description: "Menyegarkan pikiran di akhir pekan tidak memerlukan rencana wisata yang mewah. Rekreasi sederhana di Rawa Pening saja bisa jadi kegiatan yang menyenangkan.",
+      image: "/header-home2.png"
+    },
+    destinations: {
+      title: "Pada Desa Hepi Desa Bejalen",
+      subtitle: "Destinasi"
+    }
+  };
+
+  await prisma.homepageContent.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      content: homepageContent,
+      isActive: true,
+      version: 1,
+    },
+  });
+
+  console.log('✅ Homepage content created');
   console.log('🎉 Seeding completed successfully!');
 }
 

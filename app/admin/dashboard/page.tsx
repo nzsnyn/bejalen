@@ -149,10 +149,8 @@ export default function AdminDashboard() {
                                 <span className="text-sm font-medium text-gray-900 text-center">Contacts</span>
                                 <span className="text-xs text-gray-500 mt-1">{stats ? stats.totalContacts : '-'} items</span>
                             </div>
-                        </div>
-
-                        {/* Homepage Content */}
-                        <div className="group cursor-pointer" onClick={() => window.alert('Feature coming soon: Homepage Content Management')}>
+                        </div>                        {/* Homepage Content */}
+                        <div className="group cursor-pointer" onClick={() => router.push('/admin/homepage')}>
                             <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
                                 <div className="w-16 h-16 bg-indigo-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-indigo-200 transition-colors">
                                     <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
