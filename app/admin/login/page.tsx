@@ -19,7 +19,6 @@ export default function AdminLogin() {
     setIsLoading(true);
     setError('');
 
-    // Simple authentication - in production, this should be API call
     if (credentials.username === 'admin' && credentials.password === 'admin123') {
       // Set authentication cookie
       Cookies.set('admin-token', 'authenticated', { expires: 1 }); // expires in 1 day
