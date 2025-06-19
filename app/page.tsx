@@ -131,9 +131,7 @@ export default function Home() {
           <h1 className='text-white text-3xl sm:text-4xl md:text-5xl lg:text-[64px]'>
             {content.hero.title.split(', ').map((part, index, array) => (
               <React.Fragment key={index}>
-                {part}
-                {index < array.length - 1 && <br className='hidden sm:block' />}
-                {index < array.length - 1 && ', '}
+                {part} 
               </React.Fragment>
             ))}
           </h1>
