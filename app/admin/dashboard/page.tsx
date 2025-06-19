@@ -98,9 +98,8 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Folder Grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                        {/* Tour Packages */}
-                        <div className="group cursor-pointer" onClick={() => window.alert('Feature coming soon: Tour Packages Management')}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">                        {/* Tour Packages */}
+                        <div className="group cursor-pointer" onClick={() => router.push('/admin/info-paket')}>
                             <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
                                 <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-blue-200 transition-colors">
                                     <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,6 +108,19 @@ export default function AdminDashboard() {
                                 </div>
                                 <span className="text-sm font-medium text-gray-900 text-center">Tour Packages</span>
                                 <span className="text-xs text-gray-500 mt-1">{stats ? stats.totalPackages : '-'} items</span>
+                            </div>
+                        </div>
+
+                        {/* Info Paket Content */}
+                        <div className="group cursor-pointer" onClick={() => router.push('/admin/info-paket/content')}>
+                            <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
+                                <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
+                                    <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <span className="text-sm font-medium text-gray-900 text-center">Info Paket Content</span>
+                                <span className="text-xs text-gray-500 mt-1">Promo Image</span>
                             </div>
                         </div>
 
@@ -126,8 +138,8 @@ export default function AdminDashboard() {
                         </div>                        {/* Gallery */}
                         <div className="group cursor-pointer" onClick={() => router.push('/admin/gallery')}>
                             <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-                                <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
-                                    <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-pink-200 transition-colors">
+                                    <svg className="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                 </div>
