@@ -1,20 +1,81 @@
-import React from 'react'
+'use client';
+
+import React, { useEffect, useState } from 'react'
 import MainLayouts from '@/components/layouts/MainLayouts'
 
+interface PerahuMesinContent {
+  title: string;
+  headerImage: string;
+  description: string;
+  weekdayPrice: string;
+  weekendPrice: string;
+  capacity: string;
+  duration: string;
+  isActive: boolean;
+}
+
 const PerahuMesin = () => {
+    const [content, setContent] = useState<PerahuMesinContent | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetchContent();
+    }, []);
+
+    const fetchContent = async () => {
+        try {
+            const response = await fetch('/api/perahu-mesin/content');
+            if (response.ok) {
+                const data = await response.json();
+                setContent(data.data.content);
+            }
+        } catch (error) {
+            console.error('Error fetching perahu mesin content:', error);
+            // Fallback to default values
+            setContent({
+                title: 'Perahu\nMesin',
+                headerImage: '/perahuMesinHeader.png',
+                description: 'Arungi luasnya Rawa Pening dengan menaiki perahu mesin pada Desa Wisata Bejalen. Nikmati serunya menaiki perahu dengan keluarga, orang tersayang sambil menikmati pemandangan alam sekitar.',
+                weekdayPrice: 'IDR. 120.000',
+                weekendPrice: 'IDR. 150.000',
+                capacity: '8',
+                duration: '30 menit',
+                isActive: true
+            });
+        }
+        setIsLoading(false);
+    };
+
+    if (isLoading) {
+        return (
+            <div>
+                <MainLayouts>
+                    <div className="flex items-center justify-center min-h-screen">
+                        <div className="text-lg">Loading...</div>
+                    </div>
+                </MainLayouts>
+            </div>
+        );
+    }
+
     return (
         <div>
             <MainLayouts>
                 {/* Hero Section */}
-                <div className='bg-[url(/perahuMesinHeader.png)] h-screen w-full bg-cover bg-no-repeat bg-center flex items-center justify-center px-4'>
+                <div 
+                    className='h-screen w-full bg-cover bg-no-repeat bg-center flex items-center justify-center px-4'
+                    style={{ backgroundImage: `url(${content?.headerImage || '/perahuMesinHeader.png'})` }}
+                >
                     <div className='text-center font-kameron'>
-                        <h1 className='text-white text-5xl sm:text-6xl md:text-7xl lg:text-[128px]'>Perahu<br />Mesin</h1>
+                        <h1 className='text-white text-5xl sm:text-6xl md:text-7xl lg:text-[128px] whitespace-pre-line'>
+                            {content?.title || 'Perahu\nMesin'}
+                        </h1>
                     </div>
                 </div>
 
                 {/* Description Section */}
                 <p className='font-kameron text-xl sm:text-2xl text-center mx-auto mt-10 sm:mt-20 px-4 w-full max-w-[667px]'>
-                    Arungi luasnya Rawa Pening dengan menaiki perahu mesin pada Desa Wisata Bejalen. Nikmati serunya menaiki perahu dengan keluarga, orang tersayang sambil menikmati pemandangan alam sekitar.
+                    {content?.description || 'Arungi luasnya Rawa Pening dengan menaiki perahu mesin pada Desa Wisata Bejalen. Nikmati serunya menaiki perahu dengan keluarga, orang tersayang sambil menikmati pemandangan alam sekitar.'}
                 </p>
 
                 {/* Pricing Section */}
@@ -34,9 +95,9 @@ const PerahuMesin = () => {
                                 Weekdays
                             </h1>
                             <p className='mx-auto font-kameron text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl'>
-                                IDR. 120.000 <br />
-                                untuk kapasitas <br /> maksimal 8 <br /> orang dan <br />
-                                naik selama <br />30 menit
+                                {content?.weekdayPrice || 'IDR. 120.000'} <br />
+                                untuk kapasitas <br /> maksimal {content?.capacity || '8'} <br /> orang dan <br />
+                                naik selama <br />{content?.duration || '30 menit'}
                             </p>
                         </div>
                         
@@ -46,9 +107,9 @@ const PerahuMesin = () => {
                                 Weekend
                             </h1>
                             <p className='mx-auto font-kameron text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl'>
-                                IDR. 150.000 <br />
-                                untuk kapasitas <br /> maksimal 8 <br /> orang dan <br />
-                                naik selama <br />30 menit
+                                {content?.weekendPrice || 'IDR. 150.000'} <br />
+                                untuk kapasitas <br /> maksimal {content?.capacity || '8'} <br /> orang dan <br />
+                                naik selama <br />{content?.duration || '30 menit'}
                             </p>
                         </div>
                     </div>

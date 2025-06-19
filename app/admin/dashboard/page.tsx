@@ -170,10 +170,8 @@ export default function AdminDashboard() {
                                 <span className="text-sm font-medium text-gray-900 text-center">Homepage</span>
                                 <span className="text-xs text-gray-500 mt-1">Content</span>
                             </div>
-                        </div>
-
-                        {/* Kampoeng Rawa */}
-                        <div className="group cursor-pointer" onClick={() => window.alert('Feature coming soon: Kampoeng Rawa Management')}>
+                        </div>                        {/* Kampoeng Rawa */}
+                        <div className="group cursor-pointer" onClick={() => router.push('/admin/kampoeng-rawa/content')}>
                             <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
                                 <div className="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-red-200 transition-colors">
                                     <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -183,10 +181,8 @@ export default function AdminDashboard() {
                                 <span className="text-sm font-medium text-gray-900 text-center">Kampoeng Rawa</span>
                                 <span className="text-xs text-gray-500 mt-1">Content</span>
                             </div>
-                        </div>
-
-                        {/* Perahu Mesin */}
-                        <div className="group cursor-pointer" onClick={() => window.alert('Feature coming soon: Perahu Mesin Management')}>
+                        </div>{/* Perahu Mesin */}
+                        <div className="group cursor-pointer" onClick={() => router.push('/admin/perahu-mesin/content')}>
                             <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
                                 <div className="w-16 h-16 bg-teal-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-teal-200 transition-colors">
                                     <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

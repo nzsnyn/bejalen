@@ -119,3 +119,41 @@ model InfoPaketContent {
 
   @@map("info_paket_content")
 }
+
+// Perahu Mesin content model
+model PerahuMesinContent {
+  id               String   @id @default(cuid())
+  title            String   @default("Perahu\nMesin")
+  headerImage      String   @default("/perahuMesinHeader.png")
+  description      String   @default("Arungi luasnya Rawa Pening dengan menaiki perahu mesin pada Desa Wisata Bejalen. Nikmati serunya menaiki perahu dengan keluarga, orang tersayang sambil menikmati pemandangan alam sekitar.")
+  weekdayPrice     String   @default("IDR. 120.000")
+  weekendPrice     String   @default("IDR. 150.000")
+  capacity         String   @default("8")
+  duration         String   @default("30 menit")
+  isActive         Boolean  @default(true)
+  version          Int      @default(1)
+  createdBy        String?  // Admin ID who created/updated
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("perahu_mesin_content")
+}
+
+// Kampoeng Rawa content model
+model KampoengRawaContent {
+  id               String   @id @default(cuid())
+  title            String   @default("Kampoeng\nRawa")
+  headerImage      String   @default("/kampoengRawa.png")
+  description      String   @default("Objek wisata yang paling sering dikunjungi oleh wisatawan Kampoeng Rawa. Nikmati banyak hal-hal menarik yang bisa kalian temukan disini.")
+  sectionTitle     String   @default("Yang Menarik di\nKampoeng Rawa")
+  attractions      Json     @default("[{\"name\":\"Kuliner\",\"image\":\"/kuliner.png\"},{\"name\":\"Joglo Apung\",\"image\":\"/jogloApung.png\"},{\"name\":\"Spot Foto\",\"image\":\"/spot.png\"}]")
+  websiteInfo      String   @default("Info Lebih Lanjut Kunjungi :")
+  websiteUrl       String   @default("https://kampoengrawa.com/")
+  isActive         Boolean  @default(true)
+  version          Int      @default(1)
+  createdBy        String?  // Admin ID who created/updated
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("kampoeng_rawa_content")
+}
