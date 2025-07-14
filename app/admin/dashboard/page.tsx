@@ -207,7 +207,7 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Rawa Pening */}
-                        <div className="group cursor-pointer" onClick={() => window.alert('Feature coming soon: Rawa Pening Management')}>
+                        <div className="group cursor-pointer" onClick={() => router.push('/admin/rawa-pening/content')}>
                             <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
                                 <div className="w-16 h-16 bg-cyan-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-cyan-200 transition-colors">
                                     <svg className="w-8 h-8 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -157,3 +157,37 @@ model KampoengRawaContent {
 
   @@map("kampoeng_rawa_content")
 }
+
+// Rawa Pening content model
+model RawaPeningContent {
+  id               String   @id @default(cuid())
+  title            String   @default("Rawa Pening")
+  description      String   @default("Destinasi wisata alam yang menawan dengan pemandangan danau yang indah.")
+  heroImage        String   @default("/rawaPeningHeader.png")
+  content          String   @default("Rawa Pening merupakan danau alami yang terletak di Kabupaten Semarang, Jawa Tengah. Tempat ini menawarkan keindahan alam yang memukau dengan berbagai aktivitas wisata air yang menarik.")
+  features         Json     @default("[\"Pemandangan danau yang indah\",\"Wisata air dan perahu\",\"Spot foto yang instagramable\",\"Kuliner khas danau\"]")
+  isActive         Boolean  @default(true)
+  version          Int      @default(1)
+  createdBy        String?  // Admin ID who created/updated
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("rawa_pening_content")
+}
+
+// Lucky Land content model
+model LuckyLandContent {
+  id               String   @id @default(cuid())
+  title            String   @default("Lucky\nLand")
+  description      String   @default("Destinasi wisata seru dengan berbagai wahana permainan yang menarik untuk keluarga.")
+  headerImage      String   @default("/lucky.png")
+  content          String   @default("Lucky Land adalah area rekreasi yang menyediakan berbagai wahana permainan dan aktivitas seru untuk semua kalangan, terutama keluarga dan anak-anak.")
+  features         Json     @default("[\"Wahana permainan anak\",\"Area bermain keluarga\",\"Spot foto menarik\",\"Fasilitas lengkap\"]")
+  isActive         Boolean  @default(true)
+  version          Int      @default(1)
+  createdBy        String?  // Admin ID who created/updated
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("lucky_land_content")
+}
